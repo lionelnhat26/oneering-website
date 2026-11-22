@@ -1,10 +1,17 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-page-lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Oneering | Engineering after Agile</title>
+<meta name="description" content="Oneering builds, improves and runs production software. AI agents do the work, a named engineer is accountable, and nothing ships until an independent check passes.">
 <link rel="canonical" href="https://oneering.com/">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="alternate" hreflang="en" href="https://oneering.com/">
+<link rel="alternate" hreflang="vi" href="https://oneering.com/vi/">
+<link rel="alternate" hreflang="x-default" href="https://oneering.com/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://oneering.com/">
 <meta property="og:title" content="Oneering | Engineering after Agile">
@@ -22,9 +29,6 @@
 <meta name="robots" content="index, follow">
 <script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://oneering.com/#org", "name": "Oneering", "url": "https://oneering.com/", "logo": "https://oneering.com/favicon.svg", "slogan": "Engineering after Agile.", "description": "Oneering builds, improves and runs production software. AI agents do the work, a named engineer is accountable, and nothing ships until an independent check passes.", "email": "one@oneering.com", "founder": {"@type": "Person", "name": "Nguyễn Long Nhật", "jobTitle": "Founder"}, "knowsAbout": ["Outcome-Native Engineering", "AI-native software engineering", "Software delivery", "AI agents"]}, {"@type": "WebSite", "@id": "https://oneering.com/#site", "url": "https://oneering.com/", "name": "Oneering", "inLanguage": ["en", "vi"], "publisher": {"@id": "https://oneering.com/#org"}}]}</script>
 <style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
-<meta name="claude:viewport-fit-sides" content="cover">
-<title>Oneering | Engineering after Agile</title>
-<meta name="description" content="Oneering builds, improves and runs production software. AI agents do the work, a named engineer is accountable, and nothing ships until an independent check passes.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,600;125,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: two halves. The top half is the manifesto, set loud on a fixed graphite "stage":
@@ -662,11 +666,24 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     document.getElementById('lang-vi').setAttribute('aria-pressed', String(l === 'vi'));
     try { localStorage.setItem('oneering-lang', l); } catch (e) {}
   }
-  document.getElementById('lang-en').addEventListener('click', function(){ apply('en'); });
-  document.getElementById('lang-vi').addEventListener('click', function(){ apply('vi'); });
   var saved = null;
   try { saved = localStorage.getItem('oneering-lang'); } catch (e) {}
-  if (saved === 'vi' || (!saved && (navigator.language || '').toLowerCase().indexOf('vi') === 0)) apply('vi');
+  var viBrowser = (navigator.language || '').toLowerCase().indexOf('vi') === 0;
+  // Built site: each language has its own URL (/ and /vi/), so search engines index both.
+  var pageLang = document.documentElement.getAttribute('data-page-lang');
+  if (pageLang) {
+    lang = pageLang;
+    function go(l, url){ try { localStorage.setItem('oneering-lang', l); } catch (e) {} if (l !== pageLang) location.href = url; }
+    document.getElementById('lang-en').setAttribute('aria-pressed', String(lang === 'en'));
+    document.getElementById('lang-vi').setAttribute('aria-pressed', String(lang === 'vi'));
+    document.getElementById('lang-en').addEventListener('click', function(){ go('en', '/'); });
+    document.getElementById('lang-vi').addEventListener('click', function(){ go('vi', '/vi/'); });
+    if (pageLang === 'en' && (saved === 'vi' || (!saved && viBrowser))) location.replace('/vi/' + location.hash);
+  } else {
+    document.getElementById('lang-en').addEventListener('click', function(){ apply('en'); });
+    document.getElementById('lang-vi').addEventListener('click', function(){ apply('vi'); });
+    if (saved === 'vi' || (!saved && viBrowser)) apply('vi');
+  }
 
   var btn = document.getElementById('copy');
   btn.addEventListener('click', function(){

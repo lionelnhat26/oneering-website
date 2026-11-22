@@ -638,11 +638,24 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     document.getElementById('lang-vi').setAttribute('aria-pressed', String(l === 'vi'));
     try { localStorage.setItem('oneering-lang', l); } catch (e) {}
   }
-  document.getElementById('lang-en').addEventListener('click', function(){ apply('en'); });
-  document.getElementById('lang-vi').addEventListener('click', function(){ apply('vi'); });
   var saved = null;
   try { saved = localStorage.getItem('oneering-lang'); } catch (e) {}
-  if (saved === 'vi' || (!saved && (navigator.language || '').toLowerCase().indexOf('vi') === 0)) apply('vi');
+  var viBrowser = (navigator.language || '').toLowerCase().indexOf('vi') === 0;
+  // Built site: each language has its own URL (/ and /vi/), so search engines index both.
+  var pageLang = document.documentElement.getAttribute('data-page-lang');
+  if (pageLang) {
+    lang = pageLang;
+    function go(l, url){ try { localStorage.setItem('oneering-lang', l); } catch (e) {} if (l !== pageLang) location.href = url; }
+    document.getElementById('lang-en').setAttribute('aria-pressed', String(lang === 'en'));
+    document.getElementById('lang-vi').setAttribute('aria-pressed', String(lang === 'vi'));
+    document.getElementById('lang-en').addEventListener('click', function(){ go('en', '/'); });
+    document.getElementById('lang-vi').addEventListener('click', function(){ go('vi', '/vi/'); });
+    if (pageLang === 'en' && (saved === 'vi' || (!saved && viBrowser))) location.replace('/vi/' + location.hash);
+  } else {
+    document.getElementById('lang-en').addEventListener('click', function(){ apply('en'); });
+    document.getElementById('lang-vi').addEventListener('click', function(){ apply('vi'); });
+    if (saved === 'vi' || (!saved && viBrowser)) apply('vi');
+  }
 
   var btn = document.getElementById('copy');
   btn.addEventListener('click', function(){
