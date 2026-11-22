@@ -1,0 +1,674 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="canonical" href="https://oneering.com/">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://oneering.com/">
+<meta property="og:title" content="Oneering | Engineering after Agile">
+<meta property="og:description" content="Oneering builds, improves and runs production software. AI agents do the work, a named engineer is accountable, and nothing ships until an independent check passes.">
+<meta property="og:image" content="https://oneering.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Oneering | Engineering after Agile</title>
+<meta name="description" content="Oneering builds, improves and runs production software. AI agents do the work, a named engineer is accountable, and nothing ships until an independent check passes.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@125,600;125,800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: two halves. The top half is the manifesto, set loud on a fixed graphite "stage":
+   agent lanes run in from the left edge, through the mark, and the orange outcome bar leaves to the right edge.
+   The bottom half is the offer, set quiet and precise on paper. Orange is used for the outcome only. */
+:root{
+  --paper:#F2F3F1; --ink:#121416; --muted:#555B60; --line:#D5D8D4; --surface:#FFFFFF; --lane:#A3A9AE;
+  --inv-bg:#121416; --inv-fg:#F2F3F1; --inv-muted:#A3A9AE; --inv-line:#2E3338;
+  --stage-bg:#121416; --stage-fg:#F2F3F1; --stage-muted:#A3A9AE; --stage-line:#2E3338; --stage-lane:#555B60; --stage-surface:#1B1E21;
+  --stage-inv-muted:#555B60; --stage-inv-line:#D5D8D4;
+  --outcome:#FF5A1F; --on-outcome:#121416;
+  --display:'Archivo','Arial Black',system-ui,sans-serif;
+  --body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  --m:clamp(84px,15vw,200px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#16191B; --ink:#F2F3F1; --muted:#A3A9AE; --line:#2E3338; --surface:#1E2225; --lane:#555B60;
+    --inv-bg:#F2F3F1; --inv-fg:#121416; --inv-muted:#555B60; --inv-line:#D5D8D4;
+    --stage-bg:#0B0C0D; --stage-fg:#F2F3F1; --stage-muted:#A3A9AE; --stage-line:#2A2E32; --stage-lane:#4A5055; --stage-surface:#15181A;
+    --stage-inv-muted:#555B60; --stage-inv-line:#D5D8D4;
+    --outcome:#FF5A1F; --on-outcome:#121416; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#16191B; --ink:#F2F3F1; --muted:#A3A9AE; --line:#2E3338; --surface:#1E2225; --lane:#555B60;
+  --inv-bg:#F2F3F1; --inv-fg:#121416; --inv-muted:#555B60; --inv-line:#D5D8D4;
+  --stage-bg:#0B0C0D; --stage-fg:#F2F3F1; --stage-muted:#A3A9AE; --stage-line:#2A2E32; --stage-lane:#4A5055; --stage-surface:#15181A;
+  --stage-inv-muted:#555B60; --stage-inv-line:#D5D8D4;
+  --outcome:#FF5A1F; --on-outcome:#121416; color-scheme:dark;
+}
+/* The stage remaps the page tokens, so every component works on it unchanged. */
+.stage{
+  --paper:var(--stage-bg); --ink:var(--stage-fg); --muted:var(--stage-muted); --line:var(--stage-line); --lane:var(--stage-lane); --surface:var(--stage-surface);
+  --inv-bg:var(--stage-fg); --inv-fg:var(--stage-bg); --inv-muted:var(--stage-inv-muted); --inv-line:var(--stage-inv-line);
+  background:var(--paper); color:var(--ink);
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,p{margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.wrap{max-width:1200px;margin-inline:auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.disp{font-family:var(--display);font-stretch:125%;font-weight:800;letter-spacing:-.025em;text-wrap:balance}
+.ring{fill:none;stroke:var(--ink);stroke-width:14}
+.oc{fill:var(--outcome)}
+.ink{fill:var(--ink)}
+
+/* header */
+.first{margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:env(safe-area-inset-top,0px)}
+.top{padding-block:22px}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--display);font-stretch:125%;font-weight:800;font-size:20px;letter-spacing:-.02em}
+.logo svg{width:30px;height:30px;display:block}
+.logo span span{color:var(--muted)}
+nav{display:flex;align-items:center;gap:20px;flex-wrap:wrap;font-size:14px;font-weight:500}
+nav a{text-decoration:none;color:var(--muted)}
+nav a:hover{color:var(--ink)}
+.lang{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.lang button{font:500 12px var(--mono);letter-spacing:.08em;padding:6px 10px;border:0;background:transparent;color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--inv-bg);color:var(--inv-fg)}
+
+/* hero */
+.hero{padding-block:clamp(40px,7vw,96px) clamp(44px,6vw,80px)}
+.hero h1{font-size:clamp(2.3rem,9.6vw,7.6rem);line-height:.96;letter-spacing:-.04em;margin-top:20px}
+.hero .lead{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:clamp(1.2rem,2.7vw,2.1rem);line-height:1.2;letter-spacing:-.02em;margin-top:clamp(22px,3.2vw,40px);text-wrap:balance}
+.hero .sub{color:var(--muted);max-width:41em;margin-top:18px;font-size:clamp(1rem,1.5vw,1.2rem)}
+.hero .sub b{color:var(--ink);font-weight:600}
+.cta{display:flex;align-items:center;gap:22px;flex-wrap:wrap;margin-top:30px}
+.btn{display:inline-block;background:var(--inv-bg);color:var(--inv-fg);text-decoration:none;font-weight:600;font-size:15px;padding:14px 22px;border-radius:6px}
+.btn:hover{opacity:.88}
+.link{font-weight:600;font-size:15px;text-underline-offset:4px}
+
+/* the band */
+.band{display:grid;grid-template-columns:minmax(0,1.7fr) var(--m) minmax(0,1fr);align-items:center}
+.band .lanes{display:block;width:100%;height:var(--m)}
+.band .mark{display:block;width:var(--m);height:var(--m)}
+.band .out{height:calc(var(--m) * .1);background:var(--outcome)}
+.sq{fill:var(--lane)}
+.dq{fill:none;stroke:var(--ink);stroke-width:1.5}
+.run{animation:run 11s linear infinite}
+.run.b{animation-duration:15s}.run.c{animation-duration:9s}.run.d{animation-duration:13s}.run.e{animation-duration:17s}
+@keyframes run{from{transform:translateX(0)}to{transform:translateX(132px)}}
+@media (prefers-reduced-motion: reduce){.run{animation:none}}
+.band-cap{display:grid;grid-template-columns:minmax(0,1.7fr) var(--m) minmax(0,1fr);margin-top:14px}
+.band-cap span{padding-left:max(20px,env(safe-area-inset-left,0px))}
+.band-cap span:nth-child(2){padding-left:0;text-align:center;white-space:nowrap}
+.band-cap span:nth-child(3){padding-left:0;padding-right:max(20px,env(safe-area-inset-right,0px));text-align:right}
+.cust{display:flex;align-items:center;gap:14px 24px;flex-wrap:wrap;padding-block:clamp(40px,6vw,72px)}
+.cust .clogo{height:38px;width:auto;display:block;fill:var(--ink)}
+
+/* sections */
+section{padding-block:clamp(64px,10vw,128px)}
+section.tight{padding-top:0}
+.head{display:flex;flex-direction:column;gap:14px;margin-bottom:clamp(28px,4vw,52px)}
+.head h2{font-size:clamp(1.7rem,4.4vw,3.4rem);line-height:1.04;max-width:20em}
+.head p{color:var(--muted);max-width:40em;font-size:clamp(1rem,1.4vw,1.15rem)}
+.sub-h{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:clamp(1.3rem,2.6vw,2rem);letter-spacing:-.02em;line-height:1.1;text-wrap:balance}
+.block{margin-top:clamp(48px,7vw,88px)}
+.block > .mono{margin-bottom:12px}
+.block > p{color:var(--muted);max-width:40em;margin-top:12px}
+
+/* manifesto */
+.say{display:flex;flex-direction:column;gap:clamp(16px,2vw,24px);max-width:56rem}
+.say p{font-family:var(--display);font-stretch:125%;font-weight:600;font-size:clamp(1.15rem,2.5vw,1.95rem);line-height:1.28;letter-spacing:-.015em;color:var(--muted)}
+.say p.hit{color:var(--ink);font-weight:800}
+.mf{margin-top:clamp(40px,6vw,72px)}
+.mf-r{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.6fr) minmax(0,.9fr);gap:8px 32px;padding-block:18px;border-top:1px solid var(--line);align-items:baseline}
+.mf-r.lab{border-top:0;padding-block:0 12px}
+.mf-r .why{color:var(--muted)}
+.mf-r .hold{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:clamp(1.15rem,2vw,1.6rem);letter-spacing:-.02em;line-height:1.15}
+.mf-r .old{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1px}
+.sign{display:flex;align-items:center;gap:18px;margin-top:clamp(36px,5vw,64px)}
+.sign i{width:120px;height:14px;background:var(--outcome);flex:none}
+.sign span{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:clamp(1.3rem,2.8vw,2.2rem);letter-spacing:-.02em}
+
+/* comparison */
+.cmp{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.cmp-r{display:grid;grid-template-columns:210px minmax(0,1fr) minmax(0,1fr)}
+.cmp-r > div{padding:13px 18px;min-width:0}
+.cmp-r + .cmp-r > div{border-top:1px solid var(--line)}
+.cmp-r > .k{display:flex;align-items:center}
+.cmp-r > .t{color:var(--muted)}
+.cmp-r > .o{background:var(--inv-bg);color:var(--inv-fg);font-weight:600}
+.cmp-r + .cmp-r > .o{border-top-color:var(--inv-line)}
+.cmp-h b{display:block;font-size:16px}
+.cmp-h .t b{color:var(--ink)}
+.cmp-h .o b{font-family:var(--display);font-stretch:125%;font-weight:800;letter-spacing:-.01em}
+.cmp-h span{font-size:13px;font-weight:400;color:var(--muted)}
+.cmp-h .o span{color:var(--inv-muted)}
+
+/* three-up */
+.needs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(20px,3vw,40px)}
+.need{border-top:1px solid var(--ink);padding-top:16px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.need h3{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:19px;letter-spacing:-.01em;line-height:1.2}
+.need p{color:var(--muted)}
+.need .today{color:var(--muted)}
+.need .here{font-weight:600}
+.need .get{font-weight:600;color:var(--ink)}
+.need .get span{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:400;display:block;margin-bottom:2px}
+.after{margin-top:clamp(24px,3vw,36px)}
+
+/* factory diagram */
+.fx{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1.05fr);gap:14px;align-items:stretch}
+.fx .op{display:flex;align-items:center;justify-content:center;font-family:var(--display);font-stretch:125%;font-weight:800;font-size:28px;color:var(--muted)}
+.part{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.part h3{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:22px;letter-spacing:-.02em;line-height:1.1;display:flex;align-items:center;gap:10px}
+.part h3 svg{width:1.15em;height:1em;flex:none}
+.part h3 span span{color:var(--muted)}
+.part p{color:var(--muted);font-size:15px}
+.part.result{background:var(--outcome);border-color:var(--outcome);color:var(--on-outcome);justify-content:space-between}
+.part.result .mono{color:var(--on-outcome)}
+.part.result p{color:var(--on-outcome)}
+
+/* process: stacked by default, two lanes on wide screens */
+.swim{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.swim .ln,.swim .trk{display:none}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;min-width:0;position:relative;z-index:1}
+.step.agent{background:var(--inv-bg);color:var(--inv-fg);border-color:var(--inv-bg)}
+.step.agent .mono{color:var(--inv-muted)}
+.step.agent p{color:var(--inv-muted)}
+.step h3{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:17px;letter-spacing:-.01em}
+.step p{font-size:14px;line-height:1.45;color:var(--muted)}
+.step .tag{display:flex;align-items:center;gap:8px}
+.step .tag i{width:10px;height:10px;flex:none;border:1.5px solid var(--ink)}
+.step.agent .tag i{border:0;background:var(--inv-muted)}
+.step.done .tag i{border:0;background:var(--outcome);width:18px}
+.step .tag span{white-space:nowrap}
+.know{margin-top:12px;border:1px dashed var(--lane);border-radius:8px;padding:16px 18px;display:grid;grid-template-columns:200px minmax(0,1fr);gap:8px 24px;align-items:baseline}
+.know p{color:var(--muted)}
+.know b{color:var(--ink);font-weight:600}
+@media (min-width:1001px){
+  .swim{grid-template-columns:104px repeat(6,minmax(0,1fr));grid-template-rows:auto auto}
+  .swim .ln{display:flex;align-items:center;grid-column:1}
+  .swim .trk{display:block;grid-column:2 / -1;align-self:center;height:0;border-top:1px dashed var(--lane)}
+  .swim .e{grid-row:1}.swim .a{grid-row:2}
+  .swim .c1{grid-column:2}.swim .c2{grid-column:3}.swim .c3{grid-column:4}.swim .c4{grid-column:5}.swim .c5{grid-column:6}.swim .c6{grid-column:7}
+}
+
+/* roles */
+.roles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.role{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:22px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.role h3{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:clamp(1.15rem,1.9vw,1.45rem);letter-spacing:-.02em;line-height:1.1}
+.role p{color:var(--muted)}
+
+/* numbers */
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.num{display:flex;flex-direction:column;gap:10px;min-width:0}
+.num h3{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1.2}
+.num .slot{min-height:104px;border:1px dashed var(--lane);border-radius:8px;display:flex;align-items:center;justify-content:center;text-align:center;padding:12px 8px}
+.num .slot b{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:clamp(1.6rem,2.8vw,2.2rem);letter-spacing:-.02em;line-height:1}
+.num p{font-size:15px;color:var(--muted)}
+
+/* two columns */
+.two{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:start}
+.ways{display:flex;flex-direction:column;gap:12px}
+.way{border:1px solid var(--line);border-radius:8px;padding:18px;background:var(--surface);display:flex;flex-direction:column;gap:6px}
+.way.first-offer{border-color:var(--ink)}
+.way h3{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:18px;letter-spacing:-.01em}
+.way p{font-size:15px;color:var(--muted)}
+.who{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--ink);padding-top:16px}
+.who-name{font-family:var(--display);font-stretch:125%;font-weight:800;font-size:clamp(1.4rem,2.6vw,1.9rem);letter-spacing:-.02em;line-height:1.1}
+.who p{color:var(--muted)}
+.who p.strong{color:var(--ink);font-weight:600}
+
+/* contact */
+.contact h2{font-size:clamp(1.8rem,5vw,3.8rem);line-height:1.02;max-width:16em}
+.contact p{color:var(--muted);max-width:38em;margin-top:16px}
+.mail{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:26px}
+.mail .addr{font-family:var(--mono);font-size:clamp(1rem,2.4vw,1.35rem);text-underline-offset:5px}
+.mail button{font:600 14px var(--body);padding:10px 16px;border-radius:6px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+.mail button:hover{background:var(--inv-bg);color:var(--inv-fg)}
+footer{border-top:1px solid var(--line);padding-block:24px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:1000px){
+  .nums{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .two{grid-template-columns:minmax(0,1fr)}
+  .needs,.roles{grid-template-columns:minmax(0,1fr)}
+  .cmp-r{grid-template-columns:minmax(0,1fr)}
+  .cmp-r > .k{padding-bottom:0}
+  .cmp-r > .t{border-top:0 !important;padding-block:4px 10px}
+  .cmp-r > .o{border-top:0 !important}
+  .cmp-h > .k{display:none}
+  .mf-r{grid-template-columns:minmax(0,1fr)}
+  .mf-r.lab{display:none}
+  .mf-r .hold{order:-1}
+  .know{grid-template-columns:minmax(0,1fr)}
+  .fx{grid-template-columns:minmax(0,1fr)}
+  .fx .op{font-size:22px;line-height:1}
+  .band{grid-template-columns:minmax(0,1fr) var(--m) minmax(0,.5fr)}
+  .band-cap{display:flex;flex-direction:column;gap:4px}
+  .band-cap span,.band-cap span:nth-child(2),.band-cap span:nth-child(3){text-align:left;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+}
+@media (max-width:520px){
+  body{font-size:16px}
+  .nums{grid-template-columns:minmax(0,1fr)}
+  nav{gap:12px}
+}
+</style>
+
+<div class="stage first">
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top" aria-label="Oneering">
+      <svg viewBox="0 0 120 120" aria-hidden="true"><path class="ring" d="M83.1 51.9A36 36 0 1 0 83.1 68.1"/><rect class="oc" x="46" y="54" width="72" height="12"/></svg>
+      <span>One<span>ering</span></span>
+    </a>
+    <nav>
+      <a href="#manifesto" data-i="n_manifesto">Manifesto</a>
+      <a href="#model" data-i="n_model">Model</a>
+      <a href="#factory" data-i="n_factory">Factory</a>
+      <a href="#engineers" data-i="n_engineers">Engineers</a>
+      <a href="#pilot">Pilot</a>
+      <a href="#contact" data-i="n_contact">Contact</a>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" id="lang-en" aria-pressed="true">EN</button>
+        <button type="button" id="lang-vi" aria-pressed="false">VI</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="hero" id="top">
+  <div class="wrap">
+    <div class="mono" data-i="h_eye">Outcome-Native Engineering · the operating model after Agile</div>
+    <h1 class="disp">Engineering after Agile.</h1>
+    <p class="lead" data-i="h_lead">Agile was built for people. This is built for AI.</p>
+    <p class="sub" data-i="h_sub">For twenty-five years, software has been built on a process designed around human limits. AI does not share those limits. Oneering is a new operating model for software engineering: AI executes, a named engineer is accountable, and nothing counts until it is verified. <b>It takes the place of in-house teams, outsourcing and consulting.</b></p>
+    <div class="cta">
+      <a class="btn" href="#manifesto" data-i="h_cta">Read the manifesto</a>
+      <a class="link" href="#pilot" data-i="h_cta2">Start with a pilot</a>
+    </div>
+  </div>
+</div>
+
+<div aria-hidden="true">
+  <div class="band">
+    <svg class="lanes" viewBox="0 0 2400 120" preserveAspectRatio="xMaxYMid slice">
+      <defs>
+        <pattern id="ln-a" width="132" height="10" patternUnits="userSpaceOnUse">
+          <rect class="sq" x="0" y="0" width="10" height="10"/><rect class="sq" x="22" y="0" width="10" height="10"/><rect class="dq" x="44.75" y=".75" width="8.5" height="8.5"/><rect class="sq" x="66" y="0" width="10" height="10"/><rect class="sq" x="88" y="0" width="10" height="10"/><rect class="sq" x="110" y="0" width="10" height="10"/>
+        </pattern>
+        <pattern id="ln-b" width="132" height="10" patternUnits="userSpaceOnUse">
+          <rect class="sq" x="0" y="0" width="10" height="10"/><rect class="sq" x="22" y="0" width="10" height="10"/><rect class="sq" x="44" y="0" width="10" height="10"/><rect class="sq" x="66" y="0" width="10" height="10"/><rect class="dq" x="88.75" y=".75" width="8.5" height="8.5"/><rect class="sq" x="110" y="0" width="10" height="10"/>
+        </pattern>
+        <pattern id="ln-c" width="132" height="10" patternUnits="userSpaceOnUse">
+          <rect class="sq" x="0" y="0" width="10" height="10"/><rect class="sq" x="22" y="0" width="10" height="10"/><rect class="sq" x="44" y="0" width="10" height="10"/><rect class="sq" x="88" y="0" width="10" height="10"/><rect class="sq" x="110" y="0" width="10" height="10"/>
+        </pattern>
+      </defs>
+      <g transform="translate(0,19)"><rect class="run" x="-132" y="0" width="2540" height="10" fill="url(#ln-c)"/></g>
+      <g transform="translate(0,37)"><rect class="run b" x="-132" y="0" width="2540" height="10" fill="url(#ln-a)"/></g>
+      <g transform="translate(0,55)"><rect class="run c" x="-132" y="0" width="2540" height="10" fill="url(#ln-b)"/></g>
+      <g transform="translate(0,73)"><rect class="run d" x="-132" y="0" width="2540" height="10" fill="url(#ln-c)"/></g>
+      <g transform="translate(0,91)"><rect class="run e" x="-132" y="0" width="2540" height="10" fill="url(#ln-a)"/></g>
+    </svg>
+    <svg class="mark" viewBox="0 0 120 120"><path class="ring" d="M83.1 51.9A36 36 0 1 0 83.1 68.1"/><rect class="oc" x="46" y="54" width="74" height="12"/></svg>
+    <div class="out"></div>
+  </div>
+  <div class="band-cap mono">
+    <span data-i="b_1">AI agents execute</span>
+    <span data-i="b_2">Inside the process</span>
+    <span data-i="b_3">A verified outcome</span>
+  </div>
+</div>
+
+<div class="wrap cust">
+  <span class="mono" data-i="cu_lab">Our first customer</span>
+  <svg class="clogo" viewBox="152.71 429.6 774.58 267" role="img" aria-label="Droppii"><path d="M874.48824,495.45257a20.61467,20.61467,0,0,0-32.785,24.16686c-.0024.01081-.00854.01922-.01095.0301l-2.27169,10.54738a1.74014,1.74014,0,0,0,2.23431,2.02291l10.17457-3.27544a20.549,20.549,0,0,0,8.17949,1.61732,20.56728,20.56728,0,0,0,14.47925-35.10913Zm-4.15719,11.66674a10.43029,10.43029,0,0,1-10.68328,10.131,10.31936,10.31936,0,0,1-9.95376-10.313v-.05318a2.32788,2.32788,0,0,1,3.78047-1.7635,10.31767,10.31767,0,0,0,13.01927.04735,2.36612,2.36612,0,0,1,3.83865,1.82539C870.33206,507.03526,870.33172,507.07729,870.33105,507.11931Z"/><path d="M885.93664,510.05985a20.56275,20.56275,0,0,0,20.50185,20.50185,20.549,20.549,0,0,0,8.17949-1.61732l10.17457,3.27544a1.74014,1.74014,0,0,0,2.23431-2.02291l-2.27169-10.54738c-.00241-.01088-.00855-.01929-.01095-.0301a20.5946,20.5946,0,1,0-38.80758-9.55958Zm10.17844-3.06652a2.36611,2.36611,0,0,1,3.83865-1.82539,10.31767,10.31767,0,0,0,13.01927-.04735,2.32788,2.32788,0,0,1,3.78047,1.7635v.05318a10.31936,10.31936,0,0,1-9.95376,10.313,10.43029,10.43029,0,0,1-10.68328-10.131C896.11575,507.07729,896.11542,507.03526,896.11508,506.99333Z"/><path d="M298.48131,560.503v2.17984q0,30.08473-21.36483,51.52165-21.36482,21.44011-51.59427,21.43745-30.08473,0-51.449-21.43745-21.475-21.54586-21.36425-51.83223A72.73394,72.73394,0,0,1,174.11422,511.047q21.35108-21.323,51.408-21.32328a69.86147,69.86147,0,0,1,31.683,7.26686V450.24271a20.638,20.638,0,0,1,20.638-20.638h0a20.638,20.638,0,0,1,20.638,20.638Zm-72.9591,33.86395a31.76111,31.76111,0,1,0-22.38159-9.30252A30.44361,30.44361,0,0,0,225.52221,594.36691Z"/><path d="M458.63367,489.57845q30.08473,0,51.52165,21.43692,21.43531,21.4393,21.43745,51.52218,0,30.23212-21.43745,51.6669-21.44011,21.44011-51.52165,21.43745-30.23212,0-51.59428-21.43745-21.36482-21.43531-21.36482-51.6669,0-30.08474,21.36482-51.52218Q428.40262,489.57925,458.63367,489.57845Zm0,104.78846a31.75925,31.75925,0,1,0-22.38159-9.30252A30.51029,30.51029,0,0,0,458.63367,594.36691Z"/><path d="M609.71138,489.72743q30.08474,0,51.52165,21.36429,21.4353,21.36563,21.43744,51.59481,0,30.08474-21.43744,51.449-21.44013,21.36483-51.52165,21.36482a71.6055,71.6055,0,0,1-31.683-7.1216v47.58792a20.638,20.638,0,0,1-20.638,20.638h0a20.638,20.638,0,0,1-20.638-20.638V563.505a74.15568,74.15568,0,0,1,21.99-53.032Q579.9213,489.72769,609.71138,489.72743Zm0,104.64213a31.75743,31.75743,0,1,0-22.38159-9.30145A30.50927,30.50927,0,0,0,609.71138,594.36956Z"/><path d="M760.78908,489.57845q30.08473,0,51.52165,21.36429,21.43532,21.36563,21.43745,51.59481,0,30.08473-21.43745,51.449-21.44011,21.36483-51.52165,21.36483a71.60553,71.60553,0,0,1-31.683-7.12161v47.58792a20.638,20.638,0,0,1-20.638,20.638h0a20.638,20.638,0,0,1-20.638-20.638V563.356a74.15574,74.15574,0,0,1,21.99-53.032Q730.999,489.57871,760.78908,489.57845Zm0,104.64214a31.75745,31.75745,0,1,0-22.38158-9.30145A30.50932,30.50932,0,0,0,760.78908,594.22059Z"/><path d="M880.66631,556.41491v58.589a20.638,20.638,0,0,1-20.638,20.638h0a20.638,20.638,0,0,1-20.638-20.638v-58.589a20.638,20.638,0,0,1,20.638-20.638h0A20.638,20.638,0,0,1,880.66631,556.41491Z"/><path d="M927.14007,556.85066v58.15323a20.638,20.638,0,0,1-20.638,20.638h0a20.638,20.638,0,0,1-20.638-20.638V556.85066a20.638,20.638,0,0,1,20.638-20.638h0A20.638,20.638,0,0,1,927.14007,556.85066Z"/><path d="M403.39078,507.47959a84.4151,84.4151,0,0,1,9.609-8.31454,70.69979,70.69979,0,0,0-36.38068-9.58659q-30.13818,0-51.53991,21.40221-21.40232,21.40283-21.40261,51.54068V615.0078a20.60172,20.60172,0,0,0,20.60172,20.60173h0A20.60173,20.60173,0,0,0,344.88,615.0078V563.83152h.14555v-.58244a1.60359,1.60359,0,0,1-.14555-.72773,31.81432,31.81432,0,0,1,31.739-31.73984,31.7839,31.7839,0,0,1,9.81747,1.49546A78.19548,78.19548,0,0,1,403.39078,507.47959Z"/></svg>
+</div>
+</div>
+
+<main>
+<section class="stage" id="manifesto" style="padding-top:clamp(40px,6vw,72px)">
+  <div class="wrap">
+    <div class="head">
+      <div class="mono" data-i="mf_lab">Manifesto</div>
+      <h2 class="disp" data-i="mf_h">Agile was built for people. This is built for AI.</h2>
+    </div>
+    <div class="say">
+      <p data-i="mf_1">Sprints exist because people tire. Stand-ups exist because people forget. Estimates exist because people are scarce. Headcount plans exist because the only way to do more was to hire more.</p>
+      <p data-i="mf_2">AI does not tire, does not forget and is not scarce. Put it inside the old process and you get the old speed at a new cost.</p>
+      <p class="hit" data-i="mf_3">So we did not add AI to Agile. We designed the process again, for an executor that is not human.</p>
+    </div>
+    <div class="mf">
+      <div class="mf-r lab"><div class="mono" data-i="mf_c1">Because AI</div><div class="mono" data-i="mf_c2">We hold</div><div class="mono" data-i="mf_c3">In place of</div></div>
+      <div class="mf-r"><div class="why" data-i="p1_a">Never tires, and runs in parallel</div><div class="hold" data-i="p1_h">Work flows. It never waits for a sprint.</div><div class="old" data-i="p1_o">Sprints, stand-ups, estimates</div></div>
+      <div class="mf-r"><div class="why" data-i="p2_a">Does not know your running system</div><div class="hold" data-i="p2_h">System knowledge is built and kept true.</div><div class="old" data-i="p2_o">Knowledge in people's heads</div></div>
+      <div class="mf-r"><div class="why" data-i="p3_a">Does not know the business intent</div><div class="hold" data-i="p3_h">Every job starts from an outcome that can be verified.</div><div class="old" data-i="p3_o">Tickets and story points</div></div>
+      <div class="mf-r"><div class="why" data-i="p4_a">Can be wrong with full confidence</div><div class="hold" data-i="p4_h">Whoever builds never approves.</div><div class="old" data-i="p4_o">&ldquo;Done&rdquo; on the builder's word</div></div>
+      <div class="mf-r"><div class="why" data-i="p5_a">Cannot be held to account</div><div class="hold" data-i="p5_h">A named engineer answers. Not a team. Not a tool.</div><div class="old" data-i="p5_o">Ownership shared by a team</div></div>
+      <div class="mf-r"><div class="why" data-i="p6_a">Improves when the system improves</div><div class="hold" data-i="p6_h">Capacity is built. It is not hired.</div><div class="old" data-i="p6_o">Headcount plans</div></div>
+    </div>
+    <div class="sign"><i></i><span>Engineering after Agile.</span></div>
+  </div>
+</section>
+
+<section id="model">
+  <div class="wrap">
+    <div class="head">
+      <div class="mono" data-i="m_lab">The model</div>
+      <h2 class="disp" data-i="m_h">In-house, outsourcing and consulting are one model. Outcome-Native Engineering is another.</h2>
+      <p data-i="m_p">All three sell the same thing: people's time, organised in sprints. They differ only in whose payroll the people are on. Outcome-Native Engineering sells something else.</p>
+    </div>
+    <div class="cmp">
+      <div class="cmp-r cmp-h"><div class="k"></div><div class="t"><b data-i="m_today">Today's model</b><span>in-house · outsourcing · consulting</span></div><div class="o"><b>Outcome-Native Engineering</b><span data-i="m_one_s">the model Oneering runs on</span></div></div>
+      <div class="cmp-r"><div class="k mono" data-i="m1_k">Unit of work</div><div class="t" data-i="m1_t">Tickets and story points</div><div class="o" data-i="m1_o">Objectives with a verifiable outcome</div></div>
+      <div class="cmp-r"><div class="k mono" data-i="m2_k">Who executes</div><div class="t" data-i="m2_t">People, by hand</div><div class="o" data-i="m2_o">AI agents, inside the factory</div></div>
+      <div class="cmp-r"><div class="k mono" data-i="m3_k">Cadence</div><div class="t" data-i="m3_t">Sprints and stand-ups</div><div class="o" data-i="m3_o">Continuous flow</div></div>
+      <div class="cmp-r"><div class="k mono" data-i="m4_k">Capacity grows by</div><div class="t" data-i="m4_t">Hiring more people</div><div class="o" data-i="m4_o">Improving the factory</div></div>
+      <div class="cmp-r"><div class="k mono" data-i="m5_k">Quality</div><div class="t" data-i="m5_t">Checked by the team that built it</div><div class="o" data-i="m5_o">Verified independently, on evidence</div></div>
+      <div class="cmp-r"><div class="k mono" data-i="m6_k">Price follows</div><div class="t" data-i="m6_t">Time spent</div><div class="o" data-i="m6_o">Outcomes that pass verification</div></div>
+      <div class="cmp-r"><div class="k mono" data-i="m7_k">Incentive</div><div class="t" data-i="m7_t">To bill more hours</div><div class="o" data-i="m7_o">To deliver sooner</div></div>
+      <div class="cmp-r"><div class="k mono" data-i="m8_k">Who is accountable</div><div class="t" data-i="m8_t">A team, collectively</div><div class="o" data-i="m8_o">One named engineer</div></div>
+    </div>
+    <div class="block">
+      <div class="mono" data-i="w_lab">What the business needs</div>
+      <div class="sub-h" data-i="w_h">Stable, lean and fast. Not two of three.</div>
+      <p data-i="w_p">When people do the work, you trade one for another. More stability means more manual checks. More speed means more people. Lower cost means giving up some of both. When AI does the work inside the right process, you no longer have to choose.</p>
+      <div class="needs after">
+        <div class="need"><div class="mono" data-i="w1_k">Stability</div><div class="today" data-i="w1_t">Today: depends on manual checks.</div><div class="here" data-i="w1_h">With Oneering: every change is verified independently.</div></div>
+        <div class="need"><div class="mono" data-i="w2_k">Run cost</div><div class="today" data-i="w2_t">Today: grows with headcount.</div><div class="here" data-i="w2_h">With Oneering: capacity grows by improving the factory, not by hiring.</div></div>
+        <div class="need"><div class="mono" data-i="w3_k">Speed</div><div class="today" data-i="w3_t">Today: limited by sprints and hiring.</div><div class="here" data-i="w3_h">With Oneering: AI works in parallel, around the clock.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tight" id="factory">
+  <div class="wrap">
+    <div class="head">
+      <div class="mono" data-i="fa_lab">The factory</div>
+      <h2 class="disp">Build the factory. Deliver the outcome.</h2>
+      <p data-i="fa_p">We do not staff projects. For each customer we build a factory: a process, a platform and the knowledge of that customer's own systems. The factory delivers the outcomes.</p>
+    </div>
+    <div class="fx">
+      <div class="part"><div class="mono" data-i="fa1_k">The process</div><h3>The ONE Guide</h3><p data-i="fa1_p">Six steps that put engineers at both ends and AI in the middle. We will publish it openly.</p></div>
+      <div class="op" aria-hidden="true">+</div>
+      <div class="part"><div class="mono" data-i="fa2_k">The platform</div><h3><svg viewBox="12 0 108 104" aria-hidden="true"><polygon class="ink" points="56,4.1 78.48,57 63.28,57 56,39.9 30.45,100 15.25,100"/><polygon class="ink" points="72.63,79 87.83,79 96.75,100 81.55,100"/><rect class="oc" x="48" y="62" width="70" height="12"/></svg><span>Ai<span>nery</span></span></h3><p data-i="fa2_p">Where agents are managed, coordinated and verified. It holds the objectives, the agent runs and the evidence behind every outcome.</p></div>
+      <div class="op" aria-hidden="true">+</div>
+      <div class="part"><div class="mono" data-i="fa3_k">System knowledge</div><h3 data-i="fa3_h">Yours</h3><p data-i="fa3_p">What lets agents work inside a system that is already running. Owned by the customer, kept up to date by our engineers.</p></div>
+      <div class="op" aria-hidden="true">=</div>
+      <div class="part result"><div class="mono" data-i="fa4_k">The outcome</div><h3 data-i="fa4_h">Verified outcomes</h3><p data-i="fa4_p">Delivered, measured and signed off by a named engineer.</p></div>
+    </div>
+
+    <div class="block" id="process">
+      <div class="mono">The ONE Guide</div>
+      <div class="sub-h" data-i="s_h">Six steps. Engineers at both ends, AI in the middle.</div>
+      <div class="swim after">
+        <div class="ln e mono" data-i="s_le">Engineers</div>
+        <div class="ln a mono" data-i="s_la">AI agents</div>
+        <div class="trk e"></div>
+        <div class="trk a"></div>
+        <div class="step e c1"><div class="tag mono"><i></i><span data-i="s_eng">01 · Engineer</span></div><h3 data-i="s1_h">Objective</h3><p data-i="s1_p">The business goal, stated so it can be checked.</p></div>
+        <div class="step e c2"><div class="tag mono"><i></i><span data-i="s_eng2">02 · Engineer</span></div><h3 data-i="s2_h">Definition</h3><p data-i="s2_p">The outcome, its evidence and its limits, written before any agent runs.</p></div>
+        <div class="step agent a c3"><div class="tag mono"><i></i><span>03 · AI</span></div><h3 data-i="s3_h">Execution</h3><p data-i="s3_p">Agents do the work in parallel, inside the system knowledge.</p></div>
+        <div class="step agent a c4"><div class="tag mono"><i></i><span>04 · AI</span></div><h3 data-i="s4_h">Verification</h3><p data-i="s4_p">A separate check tests the result against the evidence.</p></div>
+        <div class="step e c5"><div class="tag mono"><i></i><span data-i="s_eng5">05 · Engineer</span></div><h3 data-i="s5_h">Decision</h3><p data-i="s5_p">A named engineer accepts the result or sends it back.</p></div>
+        <div class="step done e c6"><div class="tag mono"><i></i><span data-i="s_eng6">06 · Engineer</span></div><h3 data-i="s6_h">Outcome</h3><p data-i="s6_p">Delivered, measured and signed off.</p></div>
+      </div>
+      <div class="know"><div class="mono" data-i="k_lab">System knowledge</div><p data-i="k_p"><b>Underneath every step.</b> Agents read it before they act, and engineers update it after every job.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="stage" id="engineers">
+  <div class="wrap">
+    <div class="head">
+      <div class="mono" data-i="e_lab">The new engineer</div>
+      <h2 class="disp">Replace the model, not the team.</h2>
+      <p data-i="e_p">Engineers do not disappear in this model. Their work moves up: from writing every line by hand to building the factory, holding the knowledge and answering for the outcome.</p>
+    </div>
+    <div class="roles">
+      <div class="role"><div class="mono" data-i="e1_k">Builds the factory</div><h3>Factory Engineer</h3><p data-i="e1_p">Builds and improves the factory: the process, the platform and the checks every job passes through.</p></div>
+      <div class="role"><div class="mono" data-i="e2_k">Outcome and knowledge</div><h3>Forward Deployed Engineer</h3><p data-i="e2_p">Works alongside the customer. Defines the outcome, keeps the system knowledge up to date, and signs the result.</p></div>
+      <div class="role"><div class="mono" data-i="e3_k">Evidence</div><h3>Verification Engineer</h3><p data-i="e3_p">Designs the independent checks and decides what counts as evidence.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="deliver">
+  <div class="wrap">
+    <div class="head">
+      <div class="mono" data-i="d_lab">The offer</div>
+      <h2 class="disp" data-i="d_h">Production software, delivered as verified outcomes.</h2>
+      <p data-i="d_p">You give us an objective. We deliver the result, with the evidence that it works. We take on three kinds of work.</p>
+    </div>
+    <div class="needs">
+      <div class="need"><h3 data-i="d1_h">Run and maintain</h3><p data-i="d1_p">We run and maintain the systems and services we agree with you: fixes, upgrades, releases and incident handling within agreed hours.</p><div class="get" data-i="d1_g"><span>You get</span>A stable system, and a record of every change with its evidence.</div></div>
+      <div class="need"><h3 data-i="d2_h">Build and improve</h3><p data-i="d2_p">We deliver features and improvements from your backlog. Each one is defined as an outcome before work starts.</p><div class="get" data-i="d2_g"><span>You get</span>Working software in production, verified against what was agreed.</div></div>
+      <div class="need"><h3 data-i="d3_h">Adopt and harden</h3><p data-i="d3_p">We take software your departments built with AI and bring it up to production standard: security, architecture and integration.</p><div class="get" data-i="d3_g"><span>You get</span>An application your company can depend on, with its knowledge written down.</div></div>
+    </div>
+    <div class="block two">
+      <div>
+        <div class="mono" data-i="y_lab">Two ways to run it</div>
+        <div class="sub-h" style="margin-top:12px" data-i="y_h">We run the factory for you today. Your own team runs it next.</div>
+      </div>
+      <div class="ways">
+        <div class="way first-offer"><div class="mono" data-i="y1_k">First offer</div><h3 data-i="y1_h">Run by Oneering</h3><p data-i="y1_p">We run the factory and deliver verified outcomes. For companies that buy engineering from outside.</p></div>
+        <div class="way"><div class="mono" data-i="y2_k">Roadmap · not yet available</div><h3 data-i="y2_h">Run by your team, on Ainery</h3><p data-i="y2_p">Your engineers move to the model on our platform. It replaces the in-house process, not the people.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tight" id="pilot">
+  <div class="wrap">
+    <div class="head">
+      <div class="mono">Pilot</div>
+      <h2 class="disp">Start with one outcome. Prove the model. Then scale.</h2>
+      <p data-i="t_p">You do not have to move your engineering to a new model to find out whether it works. Start with a scope small enough to judge and real enough to matter.</p>
+    </div>
+    <div class="needs">
+      <div class="need"><div class="mono" data-i="t1_k">Step 01</div><h3 data-i="t1_h">Choose the scope</h3><p data-i="t1_p">One service, one workflow or one backlog.</p></div>
+      <div class="need"><div class="mono" data-i="t2_k">Step 02</div><h3 data-i="t2_h">Agree the baseline</h3><p data-i="t2_p">Today's cost, lead time and failure rate for that scope, the acceptance criteria, and the access we need.</p></div>
+      <div class="need"><div class="mono" data-i="t3_k">Step 03</div><h3 data-i="t3_h">Deliver and measure</h3><p data-i="t3_p">We deliver the outcomes with their evidence, and report the four numbers against your baseline.</p></div>
+    </div>
+    <p class="after" style="font-weight:600" data-i="t_f">A pilot runs 4 to 6 weeks, for a fixed fee agreed with the scope before work starts.</p>
+    <div class="after"><a class="btn" href="#contact" data-i="t_cta">Discuss a pilot</a></div>
+
+    <div class="block" id="numbers">
+      <div class="mono" data-i="u_lab">How we measure</div>
+      <div class="sub-h" data-i="u_h">What we aim to prove in every pilot.</div>
+      <p data-i="u_p">Four numbers decide whether Outcome-Native Engineering works. Each is compared with the same work under today's model. The figures below are what we aim for. A pilot measures them against your own baseline.</p>
+      <div class="nums after">
+        <div class="num"><div class="mono" data-i="u1_k">Cost</div><h3 data-i="u1_h">Cost per outcome</h3><div class="slot"><b>−50%</b></div><p data-i="u1_p">Everything spent, divided by the outcomes that passed verification.</p></div>
+        <div class="num"><div class="mono" data-i="u2_k">Speed</div><h3>Lead time</h3><div class="slot"><b>5× faster</b></div><p data-i="u2_p">From the objective being accepted to the outcome being verified.</p></div>
+        <div class="num"><div class="mono" data-i="u3_k">Quality</div><h3>First-pass yield</h3><div class="slot"><b>≥ 90%</b></div><p data-i="u3_p">The share of outcomes that pass verification the first time.</p></div>
+        <div class="num"><div class="mono" data-i="u4_k">Stability</div><h3>Change failure rate</h3><div class="slot"><b>&lt; 5%</b></div><p data-i="u4_p">The share of releases that cause an incident or a rollback.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="tight" id="safety">
+  <div class="wrap">
+    <div class="head">
+      <div class="mono" data-i="f_lab">How we work safely</div>
+      <h2 class="disp" data-i="f_h">AI does the work. People keep control.</h2>
+    </div>
+    <div class="needs">
+      <div class="need"><h3 data-i="f1_h">Your code and data stay yours</h3><p data-i="f1_p">Code, data and system knowledge belong to you, and are handed over on the terms set in our contract.</p></div>
+      <div class="need"><h3 data-i="f2_h">Agents hold no credentials</h3><p data-i="f2_p">AI agents never hold passwords, keys or tokens. Access is limited to what each job needs.</p></div>
+      <div class="need"><h3 data-i="f3_h">Production needs a person</h3><p data-i="f3_p">No change reaches production without the approval of a named engineer.</p></div>
+      <div class="need"><h3 data-i="f4_h">Verification is independent</h3><p data-i="f4_p">The agent that did the work never approves its own result.</p></div>
+      <div class="need"><h3 data-i="f5_h">Everything leaves a record</h3><p data-i="f5_p">Each outcome keeps its evidence: what was asked, what was changed and how it was checked.</p></div>
+      <div class="need"><h3 data-i="f6_h">A person answers for incidents</h3><p data-i="f6_p">If something goes wrong, you deal with a named engineer, not with a tool.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="tight" id="founder">
+  <div class="wrap two">
+    <div class="head" style="margin-bottom:0">
+      <div class="mono" data-i="o_lab">Who is behind Oneering</div>
+      <h2 class="disp" data-i="o_h">The first named engineer is the founder.</h2>
+    </div>
+    <div class="who">
+      <div class="who-name">Nguyễn Long Nhật</div>
+      <div class="mono" data-i="o_role">Founder · CTO of Droppii</div>
+      <p data-i="o_p1">Nhật leads technology at Droppii: engineering, security, data and system stability. Outcome-Native Engineering and Ainery were first built there, to run the systems of a real company.</p>
+      <p class="strong" data-i="o_p2">Nhật is the named engineer on every pilot.</p>
+    </div>
+  </div>
+</section>
+
+<section class="stage contact" id="contact">
+  <div class="wrap">
+    <div class="mono" data-i="c_lab">Contact</div>
+    <h2 class="disp" style="margin-top:14px" data-i="c_h">Tell us what you need engineering to deliver.</h2>
+    <p data-i="c_p">We are just getting started, and we are taking a small number of pilots. Write to us with the outcome you have in mind.</p>
+    <div class="mail">
+      <a class="addr" id="addr" href="mailto:one@oneering.com">one@oneering.com</a>
+      <button type="button" id="copy" data-i="c_copy">Copy address</button>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap mono">
+    <span>Oneering · Engineering after Agile.</span>
+    <span>© 2026 Oneering</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var VI = {
+    n_manifesto:"Tuyên ngôn", n_model:"Mô hình", n_factory:"Nhà máy", n_engineers:"Kỹ sư", n_contact:"Liên hệ",
+    h_eye:"Outcome-Native Engineering · mô hình vận hành sau Agile",
+    h_lead:"Agile sinh ra cho con người. Mô hình này sinh ra cho AI.",
+    h_sub:"Suốt hai mươi lăm năm, phần mềm được làm ra bằng một quy trình thiết kế theo giới hạn của con người. AI không có những giới hạn đó. Oneering là một mô hình vận hành mới cho kỹ thuật phần mềm: AI thực thi, một kỹ sư đứng tên chịu trách nhiệm, và không gì được tính khi chưa qua kiểm chứng. <b>Mô hình này thay cho đội in-house, outsourcing và consulting.</b>",
+    h_cta:"Đọc tuyên ngôn", h_cta2:"Bắt đầu bằng một pilot",
+    b_1:"AI agent thực thi", b_2:"Trong quy trình", b_3:"Kết quả đã kiểm chứng",
+    cu_lab:"Khách hàng đầu tiên",
+    mf_lab:"Tuyên ngôn", mf_h:"Agile sinh ra cho con người. Mô hình này sinh ra cho AI.",
+    mf_1:"Sprint tồn tại vì con người biết mệt. Stand-up tồn tại vì con người hay quên. Ước lượng tồn tại vì con người là nguồn lực khan hiếm. Kế hoạch tuyển dụng tồn tại vì muốn làm nhiều hơn thì chỉ có cách thêm người.",
+    mf_2:"AI không mệt, không quên và không khan hiếm. Đặt nó vào quy trình cũ, bạn nhận lại tốc độ cũ với một khoản chi phí mới.",
+    mf_3:"Vì vậy chúng tôi không gắn AI vào Agile. Chúng tôi thiết kế lại quy trình, cho một người thực thi không phải con người.",
+    mf_c1:"Vì AI", mf_c2:"Chúng tôi giữ nguyên tắc", mf_c3:"Thay cho",
+    p1_a:"Không biết mệt, làm được nhiều việc song song", p1_h:"Công việc chạy liên tục. Không chờ sprint.", p1_o:"Sprint, stand-up, ước lượng",
+    p2_a:"Không hiểu hệ thống đang chạy của bạn", p2_h:"Tri thức hệ thống được xây dựng và giữ cho đúng.", p2_o:"Tri thức nằm trong đầu từng người",
+    p3_a:"Không biết mục đích kinh doanh", p3_h:"Mọi việc bắt đầu từ một kết quả kiểm chứng được.", p3_o:"Ticket và story point",
+    p4_a:"Có thể sai mà vẫn rất tự tin", p4_h:"Người làm không bao giờ là người duyệt.", p4_o:"“Xong” theo lời người làm",
+    p5_a:"Không thể chịu trách nhiệm", p5_h:"Một kỹ sư đứng tên chịu trách nhiệm. Không phải cả đội. Không phải công cụ.", p5_o:"Trách nhiệm chia đều cho cả đội",
+    p6_a:"Hệ thống càng tốt thì AI làm càng tốt", p6_h:"Năng lực được xây, không phải tuyển.", p6_o:"Kế hoạch tuyển người",
+    m_lab:"Mô hình", m_h:"In-house, outsourcing và consulting thực chất là một mô hình. Outcome-Native Engineering là một mô hình khác.",
+    m_p:"Cả ba đều bán cùng một thứ: thời gian của con người, tổ chức theo sprint. Chúng chỉ khác nhau ở chỗ người đó nằm trong bảng lương của ai. Outcome-Native Engineering bán một thứ khác.",
+    m_today:"Mô hình hiện nay", m_one_s:"mô hình của Oneering",
+    m1_k:"Đơn vị công việc", m1_t:"Ticket và story point", m1_o:"Mục tiêu có kết quả kiểm chứng được",
+    m2_k:"Ai thực thi", m2_t:"Con người, làm thủ công", m2_o:"AI agent, trong nhà máy",
+    m3_k:"Nhịp làm việc", m3_t:"Sprint và stand-up", m3_o:"Liên tục, không chia đợt",
+    m4_k:"Năng lực tăng nhờ", m4_t:"Tuyển thêm người", m4_o:"Cải tiến nhà máy",
+    m5_k:"Chất lượng", m5_t:"Do chính đội làm ra tự kiểm tra", m5_o:"Kiểm chứng độc lập, dựa trên bằng chứng",
+    m6_k:"Giá tính theo", m6_t:"Thời gian làm việc", m6_o:"Kết quả đã qua kiểm chứng",
+    m7_k:"Động lực", m7_t:"Tính thêm giờ công", m7_o:"Bàn giao sớm hơn",
+    m8_k:"Ai chịu trách nhiệm", m8_t:"Cả đội cùng chịu", m8_o:"Một kỹ sư đứng tên",
+    w_lab:"Điều doanh nghiệp cần", w_h:"Ổn định, tiết kiệm và nhanh. Được cả ba, không phải chọn hai.",
+    w_p:"Khi con người là người làm, doanh nghiệp luôn phải đánh đổi. Muốn ổn định thì phải kiểm tra thủ công nhiều hơn. Muốn nhanh thì phải thêm người. Muốn giảm chi phí thì phải chấp nhận chậm hơn hoặc kém ổn định hơn. Khi AI làm việc trong một quy trình phù hợp, bạn không còn phải đánh đổi.",
+    w1_k:"Ổn định", w1_t:"Hiện nay: dựa vào kiểm tra thủ công.", w1_h:"Với Oneering: mọi thay đổi đều được kiểm chứng độc lập.",
+    w2_k:"Chi phí vận hành", w2_t:"Hiện nay: tăng theo số người.", w2_h:"Với Oneering: năng lực tăng nhờ cải tiến nhà máy, không nhờ tuyển thêm người.",
+    w3_k:"Tốc độ", w3_t:"Hiện nay: bị giới hạn bởi sprint và tuyển dụng.", w3_h:"Với Oneering: AI làm việc song song, liên tục.",
+    fa_lab:"Nhà máy",
+    fa_p:"Chúng tôi không xếp người vào dự án. Với mỗi khách hàng, chúng tôi xây một nhà máy: một quy trình, một nền tảng và tri thức về hệ thống của chính khách hàng đó. Nhà máy tạo ra kết quả.",
+    fa1_k:"Quy trình", fa1_p:"Sáu bước, kỹ sư ở hai đầu và AI ở giữa. Chúng tôi sẽ công bố rộng rãi.",
+    fa2_k:"Nền tảng", fa2_p:"Nơi agent được quản lý, điều phối và kiểm chứng. Nó lưu mục tiêu, các lượt chạy của agent và bằng chứng cho từng kết quả.",
+    fa3_k:"Tri thức hệ thống", fa3_h:"Của bạn", fa3_p:"Thứ giúp agent làm việc được trong một hệ thống đang chạy. Thuộc về khách hàng, do kỹ sư của chúng tôi duy trì và cập nhật.",
+    fa4_k:"Kết quả", fa4_h:"Kết quả đã kiểm chứng", fa4_p:"Bàn giao, đo lường và được một kỹ sư đứng tên ký xác nhận.",
+    s_h:"Sáu bước. Kỹ sư ở hai đầu, AI ở giữa.",
+    s_le:"Kỹ sư", s_la:"AI agent",
+    s_eng:"01 · Kỹ sư", s_eng2:"02 · Kỹ sư", s_eng5:"05 · Kỹ sư", s_eng6:"06 · Kỹ sư",
+    s1_h:"Mục tiêu", s1_p:"Mục tiêu kinh doanh, viết sao cho kiểm tra được.",
+    s2_h:"Định nghĩa", s2_p:"Kết quả cần đạt, bằng chứng và giới hạn, viết ra trước khi agent chạy.",
+    s3_h:"Thực thi", s3_p:"Agent làm việc song song, dựa trên tri thức hệ thống.",
+    s4_h:"Kiểm chứng", s4_p:"Một bước kiểm tra riêng đối chiếu kết quả với bằng chứng.",
+    s5_h:"Quyết định", s5_p:"Một kỹ sư đứng tên chấp nhận kết quả hoặc trả lại.",
+    s6_h:"Kết quả", s6_p:"Bàn giao, đo lường và ký xác nhận.",
+    k_lab:"Tri thức hệ thống", k_p:"<b>Nằm dưới mọi bước.</b> Agent đọc nó trước khi làm, và kỹ sư cập nhật nó sau mỗi việc.",
+    e_lab:"Kỹ sư kiểu mới",
+    e_p:"Kỹ sư không biến mất trong mô hình này. Công việc của họ đi lên một tầng: từ tự tay viết từng dòng code sang xây nhà máy, giữ tri thức và chịu trách nhiệm về kết quả.",
+    e1_k:"Xây nhà máy", e1_p:"Xây và cải tiến nhà máy: quy trình, nền tảng và các bước kiểm tra mà mọi việc phải đi qua.",
+    e2_k:"Kết quả và tri thức", e2_p:"Làm việc sát bên khách hàng. Định nghĩa kết quả, giữ cho tri thức hệ thống luôn đúng, và ký vào kết quả.",
+    e3_k:"Bằng chứng", e3_p:"Thiết kế các bước kiểm chứng độc lập và quyết định điều gì được coi là bằng chứng.",
+    d_lab:"Dịch vụ", d_h:"Phần mềm chạy thật. Kết quả đã kiểm chứng.",
+    d_p:"Bạn đưa ra mục tiêu. Chúng tôi bàn giao kết quả, kèm bằng chứng cho thấy nó hoạt động. Chúng tôi nhận ba loại việc.",
+    d1_h:"Vận hành và bảo trì", d1_p:"Chúng tôi vận hành và bảo trì các hệ thống, dịch vụ hai bên thống nhất: sửa lỗi, nâng cấp, phát hành và xử lý sự cố trong khung giờ đã thỏa thuận.", d1_g:"<span>Bạn nhận được</span>Một hệ thống ổn định, kèm bản ghi về từng thay đổi và bằng chứng của nó.",
+    d2_h:"Phát triển và cải tiến", d2_p:"Chúng tôi làm tính năng và cải tiến từ backlog của bạn. Mỗi việc được định nghĩa thành một kết quả trước khi bắt đầu.", d2_g:"<span>Bạn nhận được</span>Phần mềm chạy trên production, đã kiểm chứng theo đúng điều hai bên thống nhất.",
+    d3_h:"Tiếp nhận và chuẩn hóa", d3_p:"Chúng tôi tiếp nhận phần mềm do các phòng ban tự làm bằng AI và đưa lên chuẩn production: bảo mật, kiến trúc và tích hợp.", d3_g:"<span>Bạn nhận được</span>Một ứng dụng công ty có thể dựa vào, kèm tri thức được ghi lại đầy đủ.",
+    y_lab:"Hai cách vận hành", y_h:"Hôm nay chúng tôi vận hành nhà máy cho bạn. Sau đó đến lượt đội của bạn.",
+    y1_k:"Dịch vụ đầu tiên", y1_h:"Oneering vận hành", y1_p:"Chúng tôi vận hành nhà máy và bàn giao kết quả đã kiểm chứng. Dành cho doanh nghiệp đang thuê dịch vụ phát triển phần mềm bên ngoài.",
+    y2_k:"Sắp tới · chưa cung cấp", y2_h:"Đội của bạn vận hành trên Ainery", y2_p:"Kỹ sư của bạn làm việc theo mô hình này trên nền tảng của chúng tôi. Thay quy trình, không thay con người.",
+    t_p:"Bạn không cần chuyển cả đội kỹ thuật sang mô hình mới để biết nó có hiệu quả hay không. Hãy bắt đầu với một phạm vi đủ nhỏ để đánh giá và đủ thật để có ý nghĩa.",
+    t1_k:"Bước 01", t1_h:"Chọn phạm vi", t1_p:"Một service, một workflow hoặc một backlog.",
+    t2_k:"Bước 02", t2_h:"Thống nhất baseline", t2_p:"Chi phí, lead time và tỉ lệ lỗi hiện tại của phạm vi đó, tiêu chí nghiệm thu, và quyền truy cập chúng tôi cần.",
+    t3_k:"Bước 03", t3_h:"Bàn giao và đo", t3_p:"Chúng tôi bàn giao kết quả kèm bằng chứng, và báo cáo bốn con số so với baseline của bạn.",
+    t_f:"Một pilot kéo dài 4 đến 6 tuần, với mức phí cố định được thống nhất cùng phạm vi trước khi bắt đầu.",
+    t_cta:"Trao đổi về pilot",
+    u_lab:"Cách chúng tôi đo", u_h:"Điều chúng tôi muốn chứng minh trong mỗi pilot.",
+    u_p:"Bốn con số cho biết Outcome-Native Engineering có hiệu quả hay không. Mỗi số được so với cùng công việc đó khi làm theo mô hình hiện nay. Các con số dưới đây là mức chúng tôi hướng tới. Pilot sẽ đo chúng trên baseline của chính bạn.",
+    u1_k:"Chi phí", u1_h:"Chi phí cho mỗi kết quả", u1_p:"Tổng chi phí, chia cho số kết quả đã qua kiểm chứng.",
+    u2_k:"Tốc độ", u2_p:"Tính từ lúc nhận mục tiêu đến lúc kết quả được kiểm chứng.",
+    u3_k:"Chất lượng", u3_p:"Tỉ lệ kết quả qua kiểm chứng ngay từ lần đầu.",
+    u4_k:"Ổn định", u4_p:"Tỉ lệ bản phát hành gây sự cố hoặc phải rollback.",
+    f_lab:"Cách chúng tôi làm việc an toàn", f_h:"AI làm việc. Con người giữ quyền kiểm soát.",
+    f1_h:"Code và dữ liệu vẫn là của bạn", f1_p:"Code, dữ liệu và tri thức hệ thống thuộc về bạn, và được bàn giao theo điều khoản trong hợp đồng.",
+    f2_h:"Agent không giữ thông tin đăng nhập", f2_p:"AI agent không bao giờ giữ mật khẩu, key hay token. Quyền truy cập chỉ giới hạn trong phạm vi từng việc.",
+    f3_h:"Production luôn cần con người", f3_p:"Không thay đổi nào lên production khi chưa được một kỹ sư đứng tên phê duyệt.",
+    f4_h:"Kiểm chứng độc lập", f4_p:"Agent làm việc không bao giờ tự duyệt kết quả của chính nó.",
+    f5_h:"Mọi thứ đều có bản ghi", f5_p:"Mỗi kết quả lưu lại bằng chứng: yêu cầu là gì, đã thay đổi gì và đã kiểm tra thế nào.",
+    f6_h:"Sự cố có người chịu trách nhiệm", f6_p:"Khi có vấn đề, bạn làm việc với một kỹ sư đứng tên, không phải với một công cụ.",
+    o_lab:"Ai đứng sau Oneering", o_h:"Kỹ sư đứng tên đầu tiên chính là người sáng lập.",
+    o_role:"Người sáng lập · CTO của Droppii",
+    o_p1:"Nhật phụ trách công nghệ tại Droppii: kỹ thuật, bảo mật, dữ liệu và độ ổn định hệ thống. Outcome-Native Engineering và Ainery được xây dựng đầu tiên ở đó, để vận hành hệ thống của một doanh nghiệp thật.",
+    o_p2:"Nhật là kỹ sư đứng tên trong mọi pilot.",
+    c_lab:"Liên hệ", c_h:"Hãy cho chúng tôi biết bạn cần đội kỹ thuật tạo ra kết quả gì.",
+    c_p:"Chúng tôi mới bắt đầu và đang nhận một số ít pilot. Hãy chia sẻ bài toán bạn muốn giải quyết và kết quả bạn mong đợi.",
+    c_copy:"Sao chép địa chỉ"
+  };
+  var COPIED = {en:"Copied", vi:"Đã sao chép"};
+  var nodes = document.querySelectorAll('[data-i]');
+  var EN = {};
+  nodes.forEach(function(n){ EN[n.dataset.i] = n.innerHTML; });
+  var lang = 'en';
+  function apply(l){
+    lang = l;
+    nodes.forEach(function(n){
+      var k = n.dataset.i;
+      n.innerHTML = (l === 'vi' && VI[k]) ? VI[k] : EN[k];
+    });
+    document.documentElement.lang = l;
+    document.getElementById('lang-en').setAttribute('aria-pressed', String(l === 'en'));
+    document.getElementById('lang-vi').setAttribute('aria-pressed', String(l === 'vi'));
+    try { localStorage.setItem('oneering-lang', l); } catch (e) {}
+  }
+  document.getElementById('lang-en').addEventListener('click', function(){ apply('en'); });
+  document.getElementById('lang-vi').addEventListener('click', function(){ apply('vi'); });
+  var saved = null;
+  try { saved = localStorage.getItem('oneering-lang'); } catch (e) {}
+  if (saved === 'vi' || (!saved && (navigator.language || '').toLowerCase().indexOf('vi') === 0)) apply('vi');
+
+  var btn = document.getElementById('copy');
+  btn.addEventListener('click', function(){
+    var addr = document.getElementById('addr');
+    function done(){ btn.textContent = COPIED[lang]; setTimeout(function(){ btn.textContent = lang === 'vi' ? VI.c_copy : EN.c_copy; }, 1600); }
+    function select(){ var r = document.createRange(); r.selectNodeContents(addr); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(addr.textContent).then(done).catch(select);
+    } else { select(); }
+  });
+})();
+</script>
+
+</body>
+</html>
